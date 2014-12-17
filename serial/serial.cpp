@@ -65,7 +65,7 @@ int
 SerialPort::write(const char * data, size_t len)
 {
     const char * port_name = this->_name.c_str();
-    int n;
+    ssize_t n;
 
     n = ::write(this->_fd, data, len);
     if (n == -1)
@@ -74,7 +74,7 @@ SerialPort::write(const char * data, size_t len)
         return -1;
     }
 
-    if (n < len)
+    if (n < (ssize_t)len)
     {
         fprintf(stderr, "SerialPort %s: Incomplete write\n", port_name);
         return -1;
@@ -282,7 +282,6 @@ int SerialPort::query_parity(parity_t *parity, bool force)
 {
     int res;
     struct termios term_options;
-    const char * port_name = this->_name.c_str();
 
     if (force)
     {
@@ -348,7 +347,6 @@ int SerialPort::query_char_size(int *char_size, bool force)
 {
     int res;
     struct termios term_options;
-    const char * port_name = this->_name.c_str();
 
     if (force)
     {
@@ -386,7 +384,6 @@ int SerialPort::set_default_values()
 {
     int res;
     struct termios term_options;
-    const char * port_name = this->_name.c_str();
 
     res = this->update_term_options();
     if (res != 0) return res;
@@ -468,6 +465,8 @@ int SerialPort::set_pin_status(int pin_id, bool status, bool force)
         res = this->set_term_status(term_status);
         if (res != 0) return res;
     }
+
+    return 0;
 }
 int SerialPort::query_pin_status(int pin_id, bool *status, bool force)
 {
