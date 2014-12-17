@@ -10,7 +10,7 @@ all: $(SOURCES)	$(EXEC)
 $(EXEC): $(OBJECTS) 
 	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
 
-.c.o:
+.cpp.o:
 	$(CC) $(CFLAGS) $< -o $@
 
 clean:
